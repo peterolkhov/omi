@@ -373,7 +373,7 @@ static struct bt_gatt_attr settings_service_attr[] = {
 #ifdef CONFIG_OMI_ENABLE_BLE_SLEEP_CMD
     BT_GATT_CHARACTERISTIC(&settings_sleep_cmd_characteristic_uuid.uuid,
                            BT_GATT_CHRC_WRITE,
-                           BT_GATT_PERM_WRITE,
+                           BT_GATT_PERM_WRITE_ENCRYPT,
                            NULL,
                            settings_sleep_cmd_write_handler,
                            NULL),
@@ -381,7 +381,7 @@ static struct bt_gatt_attr settings_service_attr[] = {
 #ifdef CONFIG_OMI_ENABLE_CAPTURE_LED
     BT_GATT_CHARACTERISTIC(&settings_capture_state_characteristic_uuid.uuid,
                            BT_GATT_CHRC_READ | BT_GATT_CHRC_WRITE,
-                           BT_GATT_PERM_READ | BT_GATT_PERM_WRITE,
+                           BT_GATT_PERM_READ_ENCRYPT | BT_GATT_PERM_WRITE_ENCRYPT,
                            settings_capture_state_read_handler,
                            settings_capture_state_write_handler,
                            NULL),
@@ -389,7 +389,7 @@ static struct bt_gatt_attr settings_service_attr[] = {
 #ifdef CONFIG_OMI_ENABLE_DEVICE_NAME_RW
     BT_GATT_CHARACTERISTIC(&settings_device_name_characteristic_uuid.uuid,
                            BT_GATT_CHRC_READ | BT_GATT_CHRC_WRITE,
-                           BT_GATT_PERM_READ | BT_GATT_PERM_WRITE,
+                           BT_GATT_PERM_READ_ENCRYPT | BT_GATT_PERM_WRITE_ENCRYPT,
                            settings_device_name_read_handler,
                            settings_device_name_write_handler,
                            NULL),
