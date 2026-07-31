@@ -488,18 +488,22 @@ static struct bt_gatt_service time_sync_service = BT_GATT_SERVICE(time_sync_serv
 // Advertisement data
 static const struct bt_data bt_ad[] = {
     BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
-    BT_DATA(BT_DATA_UUID128_ALL, audio_service_uuid.val, sizeof(audio_service_uuid.val)),
 };
 
 // Scan response data
+static const struct bt_data bt_sd[] = {
+    BT_DATA(BT_DATA_UUID128_ALL, audio_service_uuid.val, sizeof(audio_service_uuid.val)),
+    BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(BT_UUID_DIS_VAL)),
+};
+
 #ifdef CONFIG_OMI_ENABLE_DEVICE_NAME_RW
 static int update_advertising_name(const char *name, size_t len)
 {
-    struct bt_data sd[] = {
-        BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(BT_UUID_DIS_VAL)),
+    struct bt_data ad[] = {
+        bt_ad[0],
         BT_DATA(BT_DATA_NAME_COMPLETE, name, len),
     };
-    return bt_le_adv_update_data(bt_ad, ARRAY_SIZE(bt_ad), sd, ARRAY_SIZE(sd));
+    return bt_le_adv_update_data(ad, ARRAY_SIZE(ad), bt_sd, ARRAY_SIZE(bt_sd));
 }
 #endif
 
@@ -1651,11 +1655,11 @@ int transport_start()
     bt_gatt_service_register(&storage_service);
 #endif
     const char *device_name = bt_get_name();
-    struct bt_data bt_sd[] = {
-        BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(BT_UUID_DIS_VAL)),
+    struct bt_data ad[] = {
+        bt_ad[0],
         BT_DATA(BT_DATA_NAME_COMPLETE, device_name, strlen(device_name)),
     };
-    err = bt_le_adv_start(BT_LE_ADV_CONN, bt_ad, ARRAY_SIZE(bt_ad), bt_sd, ARRAY_SIZE(bt_sd));
+    err = bt_le_adv_start(BT_LE_ADV_CONN, ad, ARRAY_SIZE(ad), bt_sd, ARRAY_SIZE(bt_sd));
     if (err) {
         LOG_ERR("Transport advertising failed to start (err %d), continuing without BLE", err);
         // Non-fatal: continue with pusher and ring buffer so offline recording works
