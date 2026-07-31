@@ -199,7 +199,7 @@ static uint32_t idle_seconds = 0;
 static void update_idle_sleep(void)
 {
     // Streaming audio to a subscribed central, or charging, holds the device awake.
-    bool active = is_charging || (is_connected && transport_is_audio_subscribed());
+    bool active = is_charging || transport_is_audio_subscribed();
 #ifdef CONFIG_OMI_ENABLE_OFFLINE_STORAGE
     active = active || storage_transfer_active() || (is_sd_on() && !mic_in_aad_sleep());
 #endif
