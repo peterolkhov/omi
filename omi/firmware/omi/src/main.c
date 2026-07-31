@@ -178,7 +178,7 @@ void set_led_state()
         red = !is_connected;
 #endif
 #if defined(CONFIG_OMI_ENABLE_BATTERY) && defined(CONFIG_OMI_ENABLE_BATTERY_LOW_LED)
-        if (battery_percentage > 0 && battery_percentage <= CONFIG_OMI_BATTERY_LOW_THRESHOLD) {
+        if (battery_percentage <= CONFIG_OMI_BATTERY_LOW_THRESHOLD) {
             // Low battery warning: blink red regardless of connection state
             blue = false;
             red = blink_toggle;
@@ -201,7 +201,7 @@ static void update_idle_sleep(void)
     // Streaming audio to a subscribed central, or charging, holds the device awake.
     bool active = is_charging || (is_connected && transport_is_audio_subscribed());
 #ifdef CONFIG_OMI_ENABLE_OFFLINE_STORAGE
-    active = active || storage_transfer_active() || transport_offline_recording_active();
+    active = active || storage_transfer_active() || (is_sd_on() && !mic_in_aad_sleep());
 #endif
 
     if (active) {

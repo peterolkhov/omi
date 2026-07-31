@@ -294,13 +294,6 @@ void turnoff_all()
         return;
     }
 
-    rc = watchdog_deinit();
-    if (rc < 0) {
-        LOG_ERR("Failed to deinitialize watchdog (%d)", rc);
-        atomic_set(&shutdown_started, 0);
-        return;
-    }
-
     // Immediate feedback: LED off and haptic
     led_off();
     // Set is_off immediately so set_led_state() keeps LEDs off
@@ -358,6 +351,11 @@ void turnoff_all()
     lsm6dsl_time_prepare_for_system_off();
     k_msleep(1000);
     LOG_INF("Entering system off; press usr_btn to restart");
+
+    rc = watchdog_deinit();
+    if (rc < 0) {
+        LOG_WRN("Failed to deinitialize watchdog (%d)", rc);
+    }
 
     // Power off the system using sys_poweroff
     sys_poweroff();
