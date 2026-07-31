@@ -178,7 +178,7 @@ void set_led_state()
         red = !is_connected;
 #endif
 #if defined(CONFIG_OMI_ENABLE_BATTERY) && defined(CONFIG_OMI_ENABLE_BATTERY_LOW_LED)
-        if (battery_percentage <= CONFIG_OMI_BATTERY_LOW_THRESHOLD) {
+        if (battery_percentage > 0 && battery_percentage <= CONFIG_OMI_BATTERY_LOW_THRESHOLD) {
             // Low battery warning: blink red regardless of connection state
             blue = false;
             red = blink_toggle;
